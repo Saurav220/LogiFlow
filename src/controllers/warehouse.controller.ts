@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { WarehouseService } from '../services/warehouse.service';
+import { CreateWarehouseSchema } from '../dtos/warehouse.dto';
 
 export class WarehouseController {
   private service = new WarehouseService();
@@ -20,8 +21,17 @@ export class WarehouseController {
         return;
       }
 
-      // NOTE: Bug is here. We are not validating that capacity is a positive integer.
-      // We just call the service directly.
+      // Zod validation for field values & types
+      const validationResult = CreateWarehouseSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        res.status(400).json({
+          status: 'fail',
+          message: 'Validation failed',
+          errors: validationResult.error.flatten().fieldErrors,
+        });
+        return;
+      }
+
       const warehouse = await this.service.createWarehouse({
         name,
         code,

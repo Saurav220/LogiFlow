@@ -1,5 +1,5 @@
 import { Warehouse } from '../models/warehouse';
-import { CreateWarehouseDto } from '../dtos/warehouse.dto';
+import CreateWarehouseDto from '../dtos/warehouse.dto';
 
 export class WarehouseRepository {
   private static warehouses: Warehouse[] = [

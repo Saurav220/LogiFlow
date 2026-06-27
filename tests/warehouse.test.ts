@@ -46,10 +46,6 @@ describe('Warehouse API Integration Tests', () => {
       expect(res.body.errors.missingFields).toBeDefined();
     });
 
-    // NOTE: This test will fail right now if we expect it to return 400 for negative capacity,
-    // because the controller doesn't block it.
-    // Uncomment this test when validation logic is implemented.
-    /*
     it('should return 400 if capacity is negative', async () => {
       const payload = {
         name: 'Houston Hub',
@@ -63,7 +59,25 @@ describe('Warehouse API Integration Tests', () => {
         .send(payload);
 
       expect(res.status).toBe(400);
+      expect(res.body.status).toBe('fail');
+      expect(res.body.errors.capacity).toContain('capacity must be greater than or equal to 0');
     });
-    */
+
+    it('should return 400 if capacity is a float', async () => {
+      const payload = {
+        name: 'Houston Hub',
+        code: 'TX-HOU-03',
+        address: '1200 Smith St, Houston, TX 77002',
+        capacity: 15.5,
+      };
+
+      const res = await request(app)
+        .post('/api/v1/warehouses')
+        .send(payload);
+
+      expect(res.status).toBe(400);
+      expect(res.body.status).toBe('fail');
+      expect(res.body.errors.capacity).toContain('capacity must be an integer');
+    });
   });
 });

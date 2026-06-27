@@ -1,5 +1,5 @@
 import { WarehouseRepository } from '../repositories/warehouse.repository';
-import { CreateWarehouseDto } from '../dtos/warehouse.dto';
+import CreateWarehouseDto from '../dtos/warehouse.dto';
 import { Warehouse } from '../models/warehouse';
 
 export class WarehouseService {
